@@ -1,76 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CareerHub - Home</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CareerHub — Discover internships & jobs</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="light">
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="brand">CareerHub</div>
-    <div class="controls">
-      <input type="text" id="search" placeholder="Search jobs...">
-      <button id="theme-toggle" class="theme-toggle">🌙</button>
-      <button id="applied-page-btn" class="nav-btn">Applied Jobs</button>
-      <button id="responses-page-btn" class="nav-btn">Responses</button>
+<body class="theme-light">
+  <header class="site-header">
+    <div class="brand-wrap">
+      <div class="brand">CareerHub</div>
+      <div class="tagline">Find roles. Apply. Grow.</div>
     </div>
+
+    <nav class="top-actions">
+      <input id="search" class="search" type="search" placeholder="Search role or company..." />
+      <button id="theme-toggle" class="circle-btn" aria-label="Toggle theme">🌙</button>
+      <a href="applied.html" class="ghost-btn">Applied</a>
+      <a href="responses.html" class="ghost-btn">Responses</a>
+    </nav>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <div class="container">
+  <main class="page">
+    <section class="filter-bar glass">
+      <div class="filter-row">
+        <div class="filter-item">
+          <label>Location</label>
+          <select id="filter-location"><option value="">All locations</option></select>
+        </div>
+        <div class="filter-item">
+          <label>Type</label>
+          <select id="filter-type"><option value="">All types</option></select>
+        </div>
+        <div class="filter-item">
+          <label>Field</label>
+          <select id="filter-field"><option value="">All fields</option></select>
+        </div>
+        <div class="filter-item">
+          <label>Salary</label>
+          <select id="filter-salary">
+            <option value="">Any</option>
+            <option value="0-20000">₹0 – ₹20k</option>
+            <option value="20001-40000">₹20k – ₹40k</option>
+            <option value="40001-60000">₹40k – ₹60k</option>
+            <option value="60001-80000">₹60k – ₹80k</option>
+            <option value="80001-100000">₹80k – ₹100k</option>
+          </select>
+        </div>
+      </div>
+    </section>
 
-    <!-- FILTER PANEL -->
-    <aside class="filters">
-      <h4>Filter Jobs</h4>
-      <div class="filter-group">
-        <label for="filter-location">Location</label>
-        <select id="filter-location">
-          <option value="">All Locations</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="filter-type">Job Type</label>
-        <select id="filter-type">
-          <option value="">All Types</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="filter-field">Field</label>
-        <select id="filter-field">
-          <option value="">All Fields</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="filter-salary">Salary Range</label>
-        <select id="filter-salary">
-          <option value="">All Salaries</option>
-          <option value="0-20000">₹0 - ₹20,000</option>
-          <option value="20001-40000">₹20,001 - ₹40,000</option>
-          <option value="40001-60000">₹40,001 - ₹60,000</option>
-          <option value="60001-80000">₹60,001 - ₹80,000</option>
-          <option value="80001-100000">₹80,001 - ₹1,00,000</option>
-        </select>
-      </div>
-    </aside>
+    <section class="content-grid">
+      <div class="list-area" aria-live="polite"></div>
+      <aside class="side-help glass">
+        <h4>Quick tips</h4>
+        <ul>
+          <li>Use filters to narrow roles</li>
+          <li>Click Apply to save role (local)</li>
+          <li>Responses appear in Responses tab</li>
+        </ul>
+      </aside>
+    </section>
+  </main>
 
-    <!-- JOB LISTINGS -->
-    <main class="content">
-      <div class="list-area"></div>
-    </main>
-    
-  </div>
-
-  <!-- JOB DETAILS MODAL -->
-  <div class="modal" id="job-modal" style="display:none;">
-    <div class="modal-card">
-      <button class="modal-close" id="modal-close">&times;</button>
-      <div class="modal-content"></div>
+  <!-- job modal -->
+  <div id="job-modal" class="modal" aria-hidden="true">
+    <div class="modal-panel glass">
+      <button id="modal-close" class="modal-close" aria-label="Close">&times;</button>
+      <div id="modal-content"></div>
+      <div class="modal-actions">
+        <button id="modal-apply" class="primary-btn">Apply</button>
+        <button id="modal-close-2" class="ghost-btn">Close</button>
+      </div>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <!-- small toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
