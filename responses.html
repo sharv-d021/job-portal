@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerHub - Responses</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand">CareerHub</div>
+    <div class="controls">
+      <button id="home-page-btn" class="nav-btn">Home</button>
+      <button id="applied-page-btn" class="nav-btn">Applied Jobs</button>
+      <button id="theme-toggle" class="theme-toggle">🌙</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="list-area">
+    <h2>Company Responses</h2>
+    <div class="responses-list"></div>
+  </main>
+
+  <!-- JOB DETAILS MODAL -->
+  <div class="modal" id="job-modal" style="display:none;">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

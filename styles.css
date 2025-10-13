@@ -1,0 +1,152 @@
+:root {
+  --accent-start: #6a11cb;
+  --accent-end: #2575fc;
+  --surface: #fff;
+  --muted: #555;
+  --shadow: rgba(0,0,0,0.1);
+  --radius: 12px;
+}
+
+/* Body & Theme */
+body { 
+  font-family: sans-serif; 
+  margin:0; 
+  background:#f5f5f5; 
+  color:#222; 
+}
+body.dark { 
+  background:#121212; 
+  color:#eee; 
+  --surface:#1e1e1e; 
+  --muted:#aaa; 
+}
+
+/* Topbar */
+.topbar {
+  position: sticky; 
+  top:0; 
+  z-index:50;
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center;
+  padding:12px 20px;
+  backdrop-filter: blur(6px);
+  background: linear-gradient(270deg, #6a11cb, #2575fc, #6a11cb);
+  background-size: 600% 600%;
+  animation: gradientBG 10s ease infinite;
+  color:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Brand */
+.brand {
+  font-weight: 900; 
+  font-size: 28px;
+  background: linear-gradient(270deg, #6a11cb, #8e2de2, #2575fc);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: transform 0.3s, text-shadow 0.3s;
+  animation: gradientBG 8s ease infinite;
+}
+.brand:hover {
+  transform: scale(1.05);
+  text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+
+/* Gradient Animation Keyframes */
+@keyframes gradientBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* Buttons */
+.nav-btn, .theme-toggle, .btn-apply {
+  cursor:pointer;
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
+  border:none; 
+  border-radius:12px; 
+  color:white;
+  font-weight:600; 
+  padding:6px 14px;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+}
+.nav-btn:hover, .theme-toggle:hover, .btn-apply:hover {
+  transform: translateY(-2px);
+  box-shadow:0 6px 14px rgba(0,0,0,0.2);
+  filter: brightness(1.1);
+  animation: pulse 1.2s infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* Filters */
+.filters { 
+  display:flex; 
+  gap:12px; 
+  flex-wrap:wrap; 
+  padding:20px; 
+}
+.filters select, .filters input[type="text"] {
+  padding:6px 10px; 
+  border-radius:8px; 
+  border:1px solid #ccc; 
+  flex:1;
+  transition: border 0.2s;
+}
+.filters select:focus, .filters input:focus { 
+  border-color: #2575fc; 
+  outline:none; 
+}
+
+/* Job Cards */
+.list-area, .applied-list, .responses-list {
+  display: grid; 
+  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+  gap:16px; 
+  padding:20px;
+}
+.job-item.card {
+  display:flex; 
+  flex-direction:column; 
+  gap:8px;
+  background: var(--surface);
+  padding:16px; 
+  border-radius: var(--radius);
+  box-shadow:0 12px 28px var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.job-item.card:hover {
+  transform: translateY(-4px);
+  box-shadow:0 18px 40px var(--shadow);
+}
+.job-item.card p { 
+  font-size:14px; 
+  color:var(--muted); 
+  margin-top:6px; 
+}
+
+/* Meta tags */
+.meta { display:flex; gap:6px; flex-wrap:wrap; }
+.tag { background:#eee; color:#333; padding:2px 6px; border-radius:6px; font-size:12px; }
+body.dark .tag { background:#333; color:#eee; }
+
+/* Fade-in animation */
+.fade-in { 
+  opacity:0; 
+  transform: translateY(20px); 
+  animation: fadeInUp 0.5s forwards; 
+}
+@keyframes fadeInUp { 
+  to { opacity:1; transform:translateY(0); } 
+}
