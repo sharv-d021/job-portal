@@ -99,3 +99,129 @@ body{margin:0;background:linear-gradient(90deg, var(--bg) 0%, #ffffff 100%); col
   .top-actions .search{display:none}
   .site-header{flex-direction:column; gap:10px}
 }
+
+
+/* =====================================================
+   🌗 Added Theme Toggle Support (matches your design)
+   ===================================================== */
+
+/* ---------- Light Theme (default) ---------- */
+body.theme-light {
+  --bg: #e6f0ff;
+  --card: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255,255,255,0.5);
+  --muted: #4b5563;
+  --accent1: #6a11cb;
+  --accent2: #2575fc;
+  --accent-glow: rgba(99,102,241,0.15);
+  --radius: 14px;
+  --shadow: 0 8px 28px rgba(16,24,40,0.06);
+  --glass-blur: 12px;
+  --glass-contrast: 0.98;
+  color: #0f172a;
+  background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%);
+}
+
+/* ---------- Dark Theme ---------- */
+body.theme-dark {
+  --bg: #0d1117;
+  --card: rgba(22, 27, 34, 0.9);
+  --glass-border: rgba(255,255,255,0.08);
+  --muted: #9ca3af;
+  --accent1: #8b5cf6;
+  --accent2: #3b82f6;
+  --accent-glow: rgba(139,92,246,0.2);
+  --shadow: 0 8px 28px rgba(0,0,0,0.6);
+  color: #e2e8f0;
+  background: linear-gradient(180deg, #0d1117 0%, #1e293b 100%);
+}
+
+/* ---------- Smooth Transitions ---------- */
+body {
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ---------- Card Adaptations ---------- */
+body.theme-dark .job-item.card,
+body.theme-dark .card {
+  background: linear-gradient(180deg, rgba(34, 39, 46, 0.9), rgba(22, 27, 34, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  color: #e2e8f0;
+}
+
+body.theme-dark .job-item.card:hover {
+  background: linear-gradient(180deg, rgba(44, 49, 56, 1), rgba(22, 27, 34, 0.95));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.65);
+}
+
+body.theme-dark .tag {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+}
+
+body.theme-dark .company,
+body.theme-dark .job-item.card p {
+  color: var(--muted);
+}
+
+/* Shared transitions for glass, header, etc. */
+.site-header,
+.filter-bar.glass,
+.job-item.card,
+.modal-panel {
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+
+/* =====================================================
+   🌑 Improved Dark Theme Navbar (site-header)
+   ===================================================== */
+body.theme-dark .site-header {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 35, 42, 0.85),
+    rgba(22, 27, 34, 0.8)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+}
+
+body.theme-dark .brand {
+  background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 4px 16px rgba(139, 92, 246, 0.25);
+}
+
+body.theme-dark .tagline {
+  color: #9ca3af;
+}
+
+body.theme-dark .search {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+body.theme-dark .circle-btn,
+body.theme-dark .ghost-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f9fafb;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+body.theme-dark .circle-btn:hover,
+body.theme-dark .ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+body.theme-dark .ghost-btn {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}

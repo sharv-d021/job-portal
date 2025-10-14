@@ -16,9 +16,13 @@ const showToast = (msg) => {
 
 // DOM ready
 document.addEventListener('DOMContentLoaded', async () => {
+
+  console.log("1")
   // theme
   const themeToggle = $('#theme-toggle');
   themeToggle?.addEventListener('click', ()=> {
+    
+  console.log("22")
     document.body.classList.toggle('theme-light');
     document.body.classList.toggle('theme-dark');
   });
