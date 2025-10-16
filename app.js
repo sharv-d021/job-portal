@@ -274,3 +274,9 @@ function renderResponses(){
     area.appendChild(card);
   });
 }
+
+
+// ---------- authentication ----------  
+if(!localStorage.getItem('careerhubLoggedIn')){
+  window.location.href = 'login.html';
+}
