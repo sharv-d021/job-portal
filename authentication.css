@@ -1,7 +1,7 @@
 body{
   margin:0;
   font-family: Inter, sans-serif;
-  background:linear-gradient(135deg,#6a11cb,#2575fc);
+  background:linear-gradient(135deg,#6a11cb,#2d63edb7);
   height:100vh;
   display:flex;
   align-items:center;
