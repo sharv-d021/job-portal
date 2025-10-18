@@ -1,5 +1,5 @@
 // Simple, robust app.js for the new look.
-// Assumes jobs.json present and each job already has a unique `id`.
+// Assumes jobs.json present and each job already has a unique id.
 
 let jobsData = [];
 let appliedJobs = JSON.parse(localStorage.getItem('appliedJobs')) || [];
@@ -79,10 +79,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ---------- populate filters ----------
 function populateFilters(){
+  console.log("--- populate filters ---");
   const locs = [...new Set(jobsData.map(j=>j.location))].sort();
   const types = [...new Set(jobsData.map(j=>j.type))].sort();
   const fields = [...new Set(jobsData.map(j=>j.field))].sort();
-
   const addOpts = (selId, arr) => {
     const sel = document.getElementById(selId); if(!sel) return;
     arr.forEach(v => {
@@ -92,6 +92,7 @@ function populateFilters(){
   addOpts('filter-location', locs);
   addOpts('filter-type', types);
   addOpts('filter-field', fields);
+
 }
 
 // ---------- render job cards (index) ----------
@@ -275,6 +276,11 @@ function renderResponses(){
   });
 }
 
+// ---------- apply all filters ----------
+function applyAllFilters() {
+  const filtered = filteredFromCurrentFilters();
+  renderJobs(filtered);
+}
 
 // ---------- authentication ----------  
 if(!localStorage.getItem('careerhubLoggedIn')){
