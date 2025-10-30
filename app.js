@@ -106,10 +106,22 @@ function populateFilters(){
 }
 
 // ---------- render job cards (index) ----------
+// ---------- render job cards (index) ----------
 function renderJobs(list){
   const area = document.querySelector('.list-area');
   if(!area) return;
   area.innerHTML = '';
+
+  // 👇 NEW: handle empty result case
+  if (!list || list.length === 0) {
+    area.innerHTML = `
+      <div class="no-results">
+        <p>No internships or jobs found matching your filters.</p>
+      </div>
+    `;
+    return;
+  }
+
   list.forEach(job => {
     const applied = appliedJobs.some(a => a.id === job.id);
     const card = document.createElement('article');
@@ -135,6 +147,7 @@ function renderJobs(list){
     area.appendChild(card);
   });
 }
+
 
 // ---------- open modal ----------
 function openModal(job){
@@ -296,3 +309,4 @@ function applyAllFilters() {
 if(!localStorage.getItem('careerhubLoggedIn')){
   window.location.href = 'login.html';
 }
+

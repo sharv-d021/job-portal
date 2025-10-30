@@ -225,3 +225,13 @@ body.theme-dark .ghost-btn {
   font-weight: 600;
   letter-spacing: 0.3px;
 }
+
+.no-results {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+
+

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerHub - Profile</title>
+  <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+  <header>
+    <h1>CareerHub</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="applied.html">Applied</a>
+      <a href="responses.html">Responses</a>
+      <a href="profile.html" style="font-weight:600;color:#93c5fd;">Profile</a>
+      <a href="#" id="logout-btn">Logout</a>
+    </nav>
+  </header>
+
+  <div class="profile-card">
+    <div class="photo-wrapper">
+      <img id="photoPreview" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile Photo">
+      <input type="file" id="profilePhoto" accept="image/*" hidden>
+      <button id="edit-photo-btn" class="edit-photo-btn">Edit Profile</button>
+      <input type="file" id="profilePhoto" accept="image/*" hidden>
+
+    </div>
+    
+    <input type="text" id="fullName" placeholder="Full Name" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="text" id="education" placeholder="Education" />
+    <input type="text" id="skills" placeholder="Skills (comma separated)" />
+    <textarea id="bio" placeholder="About / Bio"></textarea>
+    
+
+    <button id="saveProfile">Save Profile</button>
+  </div>
+
+  <script src="profile.js"></script>
+</body>
+</html>

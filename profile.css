@@ -1,0 +1,198 @@
+:root {
+  --bg1: #f8d7e3;
+  --bg2: #d3c8ff;
+  --bg3: #b9e4ff;
+  --card: rgba(255, 255, 255, 0.55);
+  --radius: 18px;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  --accent1: #c084fc;
+  --accent2: #93c5fd;
+  --text-dark: #2e2e2e;
+  --muted: #6b7280;
+  font-family: "Inter", sans-serif;
+}
+
+/* ------------------ Base Layout ------------------ */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+  background-size: 400% 400%;
+  animation: colorFlow 10s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@keyframes colorFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ------------------ Header ------------------ */
+header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-left: 53px;
+}
+
+nav a {
+  margin: 0 10px;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav a:hover { color: var(--accent2); }
+
+/* ------------------ Profile Card ------------------ */
+.profile-card {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 440px;
+  margin-top: 90px;
+  margin-bottom: 90px;
+  padding: 40px 32px;
+  text-align: center;
+  animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------ Profile Photo ------------------ */
+.photo-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.photo-wrapper img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: var(--shadow);
+  border: 3px solid #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* violet pulse animation on upload */
+.flash-glow {
+  animation: violetPulse 1.2s ease-out;
+}
+
+@keyframes violetPulse {
+  0% { box-shadow: 0 0 0 rgba(192,132,252,0); }
+  50% { box-shadow: 0 0 25px rgba(192,132,252,0.8); }
+  100% { box-shadow: 0 0 0 rgba(192,132,252,0); }
+}
+
+.edit-photo-btn {
+  margin-top: 8px;
+  background: rgba(255,255,255,0.3);
+  border: none;
+  color: #6b21a8;
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.edit-photo-btn:hover {
+  background: rgba(255,255,255,0.8);
+  transform: scale(1.05);
+}
+
+/* ------------------ Input Fields ------------------ */
+input,
+textarea {
+  width: 100%;
+  padding: 10px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(200,200,200,0.6);
+  margin: 8px 0;
+  outline: none;
+  font-size: 14px;
+  color: var(--text-dark);
+  background: rgba(255,255,255,0.9);
+  transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px rgba(192,132,252,0.5);
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+/* pulse on field update */
+.field-glow {
+  animation: violetPulse 1.2s ease-out;
+}
+
+/* ------------------ Save Button ------------------ */
+#saveProfile {
+  width: 40%;
+  margin-top: 12px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease, box-shadow 0.3s;
+  box-shadow: 0 0 10px rgba(192,132,252,0.4);
+}
+
+#saveProfile:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(192,132,252,0.6);
+}
+
+/* subtle pulse after save */
+.profile-pulse {
+  animation: cardGlow 1.2s ease-out;
+}
+
+@keyframes cardGlow {
+  0% { box-shadow: var(--shadow); }
+  50% { box-shadow: 0 0 35px rgba(147,197,253,0.6); transform: scale(1.02); }
+  100% { box-shadow: var(--shadow); transform: scale(1); }
+}
+
+
+#logout-btn:hover {
+  color: red;
+ }
+

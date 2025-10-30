@@ -29,6 +29,16 @@
 
     if(user && user.email === email && user.password === password){
       localStorage.setItem('careerhubLoggedIn', 'true');
+
+      // make sure profile basics exist
+      const existingProfile = JSON.parse(localStorage.getItem('careerhubProfile')) || {};
+      const profileData = {
+        ...existingProfile,
+        name: user.name || existingProfile.name || '',
+        email: user.email || existingProfile.email || ''
+      };
+      localStorage.setItem('careerhubProfile', JSON.stringify(profileData));
+
       alert('Login successful!');
       window.location.href = 'index.html';
     } else {
@@ -36,5 +46,6 @@
     }
   });
 </script>
+
 </body>
 </html>
