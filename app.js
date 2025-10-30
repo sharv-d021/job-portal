@@ -15,17 +15,26 @@ const showToast = (msg) => {
 };
 
 // DOM ready
+const savedTheme = localStorage.getItem('careerhubTheme');
+if (savedTheme === 'dark') {
+  document.body.classList.add('theme-dark');
+} else {
+  document.body.classList.add('theme-light');
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   console.log("1")
+
   // theme
   const themeToggle = $('#theme-toggle');
-  themeToggle?.addEventListener('click', ()=> {
-    
-  console.log("22")
-    document.body.classList.toggle('theme-light');
-    document.body.classList.toggle('theme-dark');
-  });
+themeToggle?.addEventListener('click', () => {
+  const body = document.body;
+  const isDark = body.classList.toggle('theme-dark');
+  body.classList.toggle('theme-light', !isDark);
+  localStorage.setItem('careerhubTheme', isDark ? 'dark' : 'light');
+});
+
 
   // nav
   $('#home-page-btn')?.addEventListener('click', ()=> location.href='index.html');
@@ -75,7 +84,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('#filter-field')?.addEventListener('change', applyAllFilters);
   $('#filter-salary')?.addEventListener('change', applyAllFilters);
 
-}); // DOMContentLoaded end
+}); 
+// DOMContentLoaded end
 
 // ---------- populate filters ----------
 function populateFilters(){
