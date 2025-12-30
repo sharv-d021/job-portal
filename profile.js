@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const profile = {
   name: storedProfile.name || storedUser.username || '',
   email: storedProfile.email || storedUser.email || '',
+  birthdate: storedProfile.birthdate || '',
   education: storedProfile.education || '',
   skills: storedProfile.skills || '',
   bio: storedProfile.bio || '',
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const nameEl = document.getElementById('fullName');
   const emailEl = document.getElementById('email');
+  const birthEl = document.getElementById('birthdate');
   const eduEl = document.getElementById('education');
   const skillEl = document.getElementById('skills');
   const bioEl = document.getElementById('bio');
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   nameEl.value = profile.name;
   emailEl.value = profile.email;
+  birthEl.value = profile.birthdate;
   eduEl.value = profile.education;
   skillEl.value = profile.skills;
   bioEl.value = profile.bio;
@@ -116,7 +119,7 @@ resumeInput.addEventListener('change', (e) => {
     reader.readAsDataURL(file);
   });
 
-  [nameEl, emailEl, eduEl, skillEl, bioEl].forEach((field) => {
+  [nameEl, emailEl, birthEl, eduEl, skillEl, bioEl].forEach((field) => {
     field.addEventListener('change', () => {
       field.classList.add('field-glow');
       setTimeout(() => field.classList.remove('field-glow'), 1200);
@@ -128,6 +131,7 @@ resumeInput.addEventListener('change', (e) => {
       ...profile,
       name: nameEl.value.trim(),
       email: emailEl.value.trim(),
+      birthdate: birthEl.value,
       education: eduEl.value.trim(),
       skills: skillEl.value.trim(),
       bio: bioEl.value.trim(),
