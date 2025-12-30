@@ -32,6 +32,27 @@
     <input type="text" id="education" placeholder="Education" />
     <input type="text" id="skills" placeholder="Skills (comma separated)" />
     <textarea id="bio" placeholder="About / Bio"></textarea>
+
+    <!-- Resume Upload Section -->
+<div class="resume-section">
+  <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" hidden>
+
+  <button id="upload-resume-btn" class="edit-photo-btn">
+    Upload Resume
+  </button>
+
+  <p id="resume-name" style="font-size:13px;color:#4b5563;margin-top:6px;">
+    No resume uploaded
+  </p>
+
+  <a id="view-resume"
+     href="#"
+     target="_blank"
+     style="display:none;font-size:13px;color:#6366f1;font-weight:600;">
+     View Resume
+  </a>
+</div>
+
     
 
     <button id="saveProfile">Save Profile</button>

@@ -138,11 +138,11 @@ function renderJobs(list){
       <p>${job.description}</p>
       <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
         <button class="btn-apply" ${applied ? 'disabled':''}>${applied ? 'Applied':'Apply'}</button>
-        <button class="ghost-btn view-details">Details</button>
+        <button class="ghost-btn view-details"></button>
       </div>
     `;
     // open modal on Details
-    card.querySelector('.view-details')?.addEventListener('click', ()=> openModal(job));
+    //card.querySelector('.view-details')?.addEventListener('click', ()=> openModal(job));
     card.querySelector('.btn-apply')?.addEventListener('click', ()=> handleApply(job));
     area.appendChild(card);
   });

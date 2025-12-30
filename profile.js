@@ -7,13 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const storedProfile = JSON.parse(localStorage.getItem('careerhubProfile')) || {};
 
   const profile = {
-    name: storedProfile.name || storedUser.username || '',
-    email: storedProfile.email || storedUser.email || '',
-    education: storedProfile.education || '',
-    skills: storedProfile.skills || '',
-    bio: storedProfile.bio || '',
-    photo: storedProfile.photo || ''
-  };
+  name: storedProfile.name || storedUser.username || '',
+  email: storedProfile.email || storedUser.email || '',
+  education: storedProfile.education || '',
+  skills: storedProfile.skills || '',
+  bio: storedProfile.bio || '',
+  photo: storedProfile.photo || '',
+  resume: storedProfile.resume || null
+};
+
 
   const nameEl = document.getElementById('fullName');
   const emailEl = document.getElementById('email');
@@ -25,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const editBtn = document.getElementById('edit-photo-btn');
   const saveBtn = document.getElementById('saveProfile');
   const card = document.querySelector('.profile-card');
+  const resumeInput = document.getElementById('resumeUpload');
+  const uploadResumeBtn = document.getElementById('upload-resume-btn');
+  const resumeNameEl = document.getElementById('resume-name');
+  const viewResumeEl = document.getElementById('view-resume');
+
 
   nameEl.value = profile.name;
   emailEl.value = profile.email;
@@ -32,6 +39,66 @@ document.addEventListener('DOMContentLoaded', () => {
   skillEl.value = profile.skills;
   bioEl.value = profile.bio;
   if (profile.photo) photoEl.src = profile.photo;
+
+  if (profile.resume) {
+  resumeNameEl.textContent = profile.resume.name;
+  viewResumeEl.style.display = 'inline-block';
+
+  viewResumeEl.onclick = (e) => {
+    e.preventDefault();
+    openResume(profile.resume.data, profile.resume.name);
+  };
+}
+
+
+function openResume(base64Data, fileName) {
+  const byteString = atob(base64Data.split(',')[1]);
+  const mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  const blob = new Blob([ab], { type: mimeString });
+  const blobUrl = URL.createObjectURL(blob);
+
+  window.open(blobUrl, '_blank');
+}
+
+
+uploadResumeBtn.addEventListener('click', () => {
+  resumeInput.click();
+});
+
+resumeInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const resumeData = {
+      name: file.name,
+      data: reader.result
+    };
+
+    profile.resume = resumeData;
+    localStorage.setItem('careerhubProfile', JSON.stringify(profile));
+
+    resumeNameEl.textContent = file.name;
+    viewResumeEl.addEventListener('click', (e) => {
+  e.preventDefault();
+  openResume(profile.resume.data, profile.resume.name);
+});
+
+    resumeNameEl.classList.add('field-glow');
+    setTimeout(() => resumeNameEl.classList.remove('field-glow'), 1200);
+  };
+
+  reader.readAsDataURL(file);
+});
 
   editBtn?.addEventListener('click', () => uploadEl.click());
 
@@ -64,7 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
       education: eduEl.value.trim(),
       skills: skillEl.value.trim(),
       bio: bioEl.value.trim(),
-      photo: photoEl.src
+      photo: photoEl.src,
+      resume: profile.resume
     };
     localStorage.setItem('careerhubProfile', JSON.stringify(updated));
 
