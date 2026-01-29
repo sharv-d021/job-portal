@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerHub | Admin Dashboard</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>CareerHub</h2>
+    <ul>
+      <li onclick="showSection('company')">Company Details</li>
+      <li onclick="showSection('jobs')">Manage Vacancies</li>
+      <li onclick="showSection('applications')">Applications</li>
+      <li onclick="logout()">Logout</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="content">
+
+    <!-- COMPANY -->
+    <section id="company" class="section">
+      <h3>Company Details</h3>
+      <input id="companyName" placeholder="Company Name">
+      <input id="companyLocation" placeholder="Location">
+      <textarea id="companyDesc" placeholder="About Company"></textarea>
+      <button onclick="saveCompany()">Save</button>
+    </section>
+
+    <!-- JOBS -->
+    <section id="jobs" class="section hidden">
+      <h3>Add Vacancy</h3>
+      <input id="jobTitle" placeholder="Job Title">
+      <textarea id="jobDesc" placeholder="Role Description"></textarea>
+      <button onclick="addJob()">Add Job</button>
+
+      <h4>Current Vacancies</h4>
+      <ul id="jobList"></ul>
+    </section>
+
+    <!-- APPLICATIONS -->
+    <section id="applications" class="section hidden">
+      <h3>Applications</h3>
+      <div id="applicationList"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

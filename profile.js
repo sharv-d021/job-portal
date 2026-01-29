@@ -3,21 +3,23 @@ if (!localStorage.getItem('careerhubLoggedIn')) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const storedUser = JSON.parse(localStorage.getItem('careerhubUser')) || {};
-  const storedProfile = JSON.parse(localStorage.getItem('careerhubProfile')) || {};
 
-  const profile = {
-  name: storedProfile.name || storedUser.username || '',
-  email: storedProfile.email || storedUser.email || '',
-  birthdate: storedProfile.birthdate || '',
-  education: storedProfile.education || '',
-  skills: storedProfile.skills || '',
-  bio: storedProfile.bio || '',
-  photo: storedProfile.photo || '',
-  resume: storedProfile.resume || null
-};
+  // ---- LOAD PROFILE SAFELY ----
+  const storedUser =
+    JSON.parse(localStorage.getItem('careerhubUser')) || {};
+  let profile =
+    JSON.parse(localStorage.getItem('careerhubProfile')) || {
+      name: storedUser.username || '',
+      email: storedUser.email || '',
+      birthdate: '',
+      education: '',
+      skills: '',
+      bio: '',
+      photo: '',
+      resume: null
+    };
 
-
+  // ---- ELEMENTS ----
   const nameEl = document.getElementById('fullName');
   const emailEl = document.getElementById('email');
   const birthEl = document.getElementById('birthdate');
@@ -29,12 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const editBtn = document.getElementById('edit-photo-btn');
   const saveBtn = document.getElementById('saveProfile');
   const card = document.querySelector('.profile-card');
+
   const resumeInput = document.getElementById('resumeUpload');
   const uploadResumeBtn = document.getElementById('upload-resume-btn');
   const resumeNameEl = document.getElementById('resume-name');
   const viewResumeEl = document.getElementById('view-resume');
 
-
+  // ---- FILL DATA ----
   nameEl.value = profile.name;
   emailEl.value = profile.email;
   birthEl.value = profile.birthdate;
@@ -43,107 +46,103 @@ document.addEventListener('DOMContentLoaded', () => {
   bioEl.value = profile.bio;
   if (profile.photo) photoEl.src = profile.photo;
 
+  // ---- RESUME PREVIEW ----
   if (profile.resume) {
-  resumeNameEl.textContent = profile.resume.name;
-  viewResumeEl.style.display = 'inline-block';
-
-  viewResumeEl.onclick = (e) => {
-    e.preventDefault();
-    openResume(profile.resume.data, profile.resume.name);
-  };
-}
-
-
-function openResume(base64Data, fileName) {
-  const byteString = atob(base64Data.split(',')[1]);
-  const mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
-
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
+    resumeNameEl.textContent = profile.resume.name;
+    viewResumeEl.style.display = 'inline-block';
+    viewResumeEl.onclick = (e) => {
+      e.preventDefault();
+      openResume(profile.resume.data);
+    };
   }
 
-  const blob = new Blob([ab], { type: mimeString });
-  const blobUrl = URL.createObjectURL(blob);
+  function openResume(base64Data) {
+    const byteString = atob(base64Data.split(',')[1]);
+    const mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
 
-  window.open(blobUrl, '_blank');
-}
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
 
+    const blob = new Blob([ab], { type: mimeString });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  }
 
-uploadResumeBtn.addEventListener('click', () => {
-  resumeInput.click();
-});
+  // ---- UPLOAD RESUME ----
+  uploadResumeBtn.addEventListener('click', () => resumeInput.click());
 
-resumeInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    const resumeData = {
-      name: file.name,
-      data: reader.result
-    };
-
-    profile.resume = resumeData;
-    localStorage.setItem('careerhubProfile', JSON.stringify(profile));
-
-    resumeNameEl.textContent = file.name;
-    viewResumeEl.addEventListener('click', (e) => {
-  e.preventDefault();
-  openResume(profile.resume.data, profile.resume.name);
-});
-
-    resumeNameEl.classList.add('field-glow');
-    setTimeout(() => resumeNameEl.classList.remove('field-glow'), 1200);
-  };
-
-  reader.readAsDataURL(file);
-});
-
-  editBtn?.addEventListener('click', () => uploadEl.click());
-
-  uploadEl?.addEventListener('change', (e) => {
+  resumeInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = () => {
+      profile.resume = {
+        name: file.name,
+        data: reader.result
+      };
+
+      localStorage.setItem(
+        'careerhubProfile',
+        JSON.stringify(profile)
+      );
+
+      resumeNameEl.textContent = file.name;
+      viewResumeEl.style.display = 'inline-block';
+      viewResumeEl.onclick = (e) => {
+        e.preventDefault();
+        openResume(profile.resume.data);
+      };
+
+      resumeNameEl.classList.add('field-glow');
+      setTimeout(() =>
+        resumeNameEl.classList.remove('field-glow'), 1200);
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+  // ---- PROFILE PHOTO ----
+  editBtn.addEventListener('click', () => uploadEl.click());
+
+  uploadEl.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      profile.photo = reader.result;
       photoEl.src = reader.result;
-      photoEl.classList.add('flash-glow');
-      setTimeout(() => photoEl.classList.remove('flash-glow'), 1200);
-      localStorage.setItem('careerhubProfile', JSON.stringify({ ...profile, photo: reader.result }));
+      localStorage.setItem(
+        'careerhubProfile',
+        JSON.stringify(profile)
+      );
     };
     reader.readAsDataURL(file);
   });
 
-  [nameEl, emailEl, birthEl, eduEl, skillEl, bioEl].forEach((field) => {
-    field.addEventListener('change', () => {
-      field.classList.add('field-glow');
-      setTimeout(() => field.classList.remove('field-glow'), 1200);
-    });
-  });
-
+  // ---- SAVE PROFILE ----
   saveBtn.addEventListener('click', () => {
-    const updated = {
+    profile = {
       ...profile,
       name: nameEl.value.trim(),
       email: emailEl.value.trim(),
       birthdate: birthEl.value,
       education: eduEl.value.trim(),
       skills: skillEl.value.trim(),
-      bio: bioEl.value.trim(),
-      photo: photoEl.src,
-      resume: profile.resume
+      bio: bioEl.value.trim()
     };
-    localStorage.setItem('careerhubProfile', JSON.stringify(updated));
+
+    localStorage.setItem(
+      'careerhubProfile',
+      JSON.stringify(profile)
+    );
 
     card.classList.add('profile-pulse');
     saveBtn.textContent = '✅ Saved!';
-    saveBtn.style.background = 'linear-gradient(90deg, #c084fc, #93c5fd)';
-
     setTimeout(() => {
       saveBtn.textContent = 'Save Profile';
       card.classList.remove('profile-pulse');
@@ -151,17 +150,11 @@ resumeInput.addEventListener('change', (e) => {
   });
 });
 
-
-// Logout logic with confirmation
-const logoutBtn = document.getElementById('logout-btn');
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      localStorage.removeItem('careerhubLoggedIn');
-      window.location.href = 'login.html';
-    }
-  });
-}
-
+// ---- LOGOUT ----
+document.getElementById('logout-btn')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to log out?")) {
+    localStorage.removeItem('careerhubLoggedIn');
+    window.location.href = 'login.html';
+  }
+});
