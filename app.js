@@ -1,186 +1,299 @@
-// global vars
+// ---------------- GLOBAL VARS ----------------
 let jobsData = [];
 let appliedJobs = JSON.parse(localStorage.getItem('appliedJobs')) || [];
 let responsesJobs = JSON.parse(localStorage.getItem('responsesJobs')) || [];
 
-// helpers
+// ---------------- HELPERS ----------------
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
+
 const showToast = (msg) => {
-  const t = $('#toast'); if(!t) return;
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=> t.classList.remove('show'), 1800);
+  const t = $('#toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
 };
 
-// theme
+// ---------------- THEME ----------------
 const savedTheme = localStorage.getItem('careerhubTheme');
 document.body.classList.add(savedTheme === 'dark' ? 'theme-dark' : 'theme-light');
 
+// ---------------- DOM READY ----------------
 document.addEventListener('DOMContentLoaded', async () => {
 
-  // theme toggle
+  // -------- AUTH GUARD --------
+  if (!localStorage.getItem('careerhubLoggedIn')) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // -------- THEME TOGGLE --------
   $('#theme-toggle')?.addEventListener('click', () => {
-    const body = document.body;
-    const isDark = body.classList.toggle('theme-dark');
-    body.classList.toggle('theme-light', !isDark);
+    const isDark = document.body.classList.toggle('theme-dark');
+    document.body.classList.toggle('theme-light', !isDark);
     localStorage.setItem('careerhubTheme', isDark ? 'dark' : 'light');
   });
 
-  // fetch jobs only on index
-  if(document.querySelector('.list-area') &&
-     !document.querySelector('.applied-list') &&
-     !document.querySelector('.responses-list')) {
+  // -------- MODAL CONTROLS --------
+  const modal = $('#job-modal');
+  $('#modal-close')?.addEventListener('click', () => modal?.removeAttribute('open'));
+  $('#modal-close-2')?.addEventListener('click', () => modal?.removeAttribute('open'));
+
+  // -------- INDEX PAGE --------
+  if (
+    document.querySelector('.list-area') &&
+    !document.querySelector('.applied-list') &&
+    !document.querySelector('.responses-list')
+  ) {
     try {
       const res = await fetch('jobs.json');
       jobsData = await res.json();
+
       populateFilters();
       renderJobs(jobsData);
     } catch (e) {
-      console.error(e);
+      console.error('jobs.json fetch failed', e);
     }
   }
 
-  if(document.querySelector('.applied-list')) renderApplied();
-  if(document.querySelector('.responses-list')) renderResponses();
+  // -------- APPLIED PAGE --------
+  if (document.querySelector('.applied-list')) {
+    renderApplied();
+  }
+
+  // -------- RESPONSES PAGE --------
+  if (document.querySelector('.responses-list')) {
+    renderResponses();
+  }
+
+  // -------- SEARCH --------
+  $('#search')?.addEventListener('input', () => {
+    renderJobs(filteredFromCurrentFilters());
+  });
+
+  // -------- FILTERS --------
+  $('#filter-location')?.addEventListener('change', applyAllFilters);
+  $('#filter-type')?.addEventListener('change', applyAllFilters);
+  $('#filter-field')?.addEventListener('change', applyAllFilters);
+  $('#filter-salary')?.addEventListener('change', applyAllFilters);
 });
 
-// ---------- filters ----------
-function populateFilters(){
-  const locs = [...new Set(jobsData.map(j=>j.location))];
-  const types = [...new Set(jobsData.map(j=>j.type))];
-  const fields = [...new Set(jobsData.map(j=>j.field))];
-  const add = (id, arr) => {
-    const s = document.getElementById(id); if(!s) return;
+// ---------------- FILTER POPULATION ----------------
+function populateFilters() {
+  const locs = [...new Set(jobsData.map(j => j.location))];
+  const types = [...new Set(jobsData.map(j => j.type))];
+  const fields = [...new Set(jobsData.map(j => j.field))];
+
+  const addOpts = (id, arr) => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
     arr.forEach(v => {
       const o = document.createElement('option');
-      o.value = v; o.textContent = v; s.appendChild(o);
+      o.value = v;
+      o.textContent = v;
+      sel.appendChild(o);
     });
   };
-  add('filter-location', locs);
-  add('filter-type', types);
-  add('filter-field', fields);
+
+  addOpts('filter-location', locs);
+  addOpts('filter-type', types);
+  addOpts('filter-field', fields);
 }
 
-// ---------- render jobs ----------
-function renderJobs(list){
+// ---------------- JOB RENDER ----------------
+function renderJobs(list) {
   const area = document.querySelector('.list-area');
-  if(!area) return;
+  if (!area) return;
+
   area.innerHTML = '';
 
-  if(!list || list.length === 0){
-    area.innerHTML = `<p style="color:var(--muted)">No jobs found.</p>`;
+  if (!list || list.length === 0) {
+    area.innerHTML =
+      '<p style="color:var(--muted);padding:18px">No jobs found.</p>';
     return;
   }
 
   list.forEach(job => {
     const applied = appliedJobs.some(a => a.id === job.id);
+
     const card = document.createElement('article');
     card.className = 'job-item card';
+
     card.innerHTML = `
       <div class="title">${job.role}</div>
       <div class="company">${job.company}</div>
+
+      <div class="meta">
+        <div class="tag">${job.type}</div>
+        <div class="tag">${job.location}</div>
+        <div class="tag">${job.salary}</div>
+      </div>
+
       <p>${job.description}</p>
-      <button class="btn-apply" ${applied?'disabled':''}>
-        ${applied?'Applied':'Apply'}
+
+      <button class="btn-apply" ${applied ? 'disabled' : ''}>
+        ${applied ? 'Applied' : 'Apply'}
       </button>
     `;
-    card.querySelector('.btn-apply')?.addEventListener('click', ()=> handleApply(job));
+
+    card.querySelector('.btn-apply')
+      .addEventListener('click', () => handleApply(job));
+
     area.appendChild(card);
   });
 }
 
-// ---------- apply ----------
-function handleApply(job){
-  if(appliedJobs.some(a => a.id === job.id)){
-    showToast('Already applied'); return;
+// ---------------- APPLY JOB (CRITICAL SAFE LOGIC) ----------------
+function handleApply(job) {
+  if (appliedJobs.some(a => a.id === job.id)) {
+    showToast('Already applied');
+    return;
   }
 
+  // appliedJobs
   appliedJobs.push(job);
   localStorage.setItem('appliedJobs', JSON.stringify(appliedJobs));
 
-  // create response entry
-  responsesJobs.push({
-    ...job,
-    response: "Pending",
-    interview: null
-  });
-  localStorage.setItem('responsesJobs', JSON.stringify(responsesJobs));
+  // responsesJobs (SAFE MERGE)
+  let responses =
+    JSON.parse(localStorage.getItem('responsesJobs')) || [];
+
+  if (!responses.some(r => r.id === job.id)) {
+    responses.push({
+      ...job,
+      response: 'Pending',
+      interview: null
+    });
+  }
+
+  localStorage.setItem('responsesJobs', JSON.stringify(responses));
 
   showToast('Applied ✔');
+  renderJobs(filteredFromCurrentFilters());
 }
 
-// ---------- applied page ----------
-function renderApplied(){
-  const area = document.querySelector('.applied-list');
-  if(!area) return;
-  appliedJobs = JSON.parse(localStorage.getItem('appliedJobs')) || [];
+// ---------------- FILTER LOGIC ----------------
+function filteredFromCurrentFilters() {
+  const q = $('#search')?.value.toLowerCase() || '';
+  const loc = $('#filter-location')?.value || '';
+  const typ = $('#filter-type')?.value || '';
+  const fld = $('#filter-field')?.value || '';
+  const sal = $('#filter-salary')?.value || '';
 
-  if(appliedJobs.length === 0){
-    area.innerHTML = '<p style="color:var(--muted)">No applied jobs.</p>';
+  return jobsData.filter(j => {
+
+    if (q && !(
+      j.role.toLowerCase().includes(q) ||
+      j.company.toLowerCase().includes(q)
+    )) return false;
+
+    if (loc && j.location !== loc) return false;
+    if (typ && j.type !== typ) return false;
+    if (fld && j.field !== fld) return false;
+
+    if (sal) {
+      const [min, max] = sal.split('-').map(Number);
+      const num = parseInt(j.salary);
+      if (num < min || num > max) return false;
+    }
+
+    return true;
+  });
+}
+
+function applyAllFilters() {
+  renderJobs(filteredFromCurrentFilters());
+}
+
+// ---------------- APPLIED PAGE ----------------
+function renderApplied() {
+  const area = document.querySelector('.applied-list');
+  if (!area) return;
+
+  const applied =
+    JSON.parse(localStorage.getItem('appliedJobs')) || [];
+
+  area.innerHTML = '';
+
+  if (applied.length === 0) {
+    area.innerHTML =
+      '<p style="color:var(--muted);padding:18px">No applied jobs yet.</p>';
     return;
   }
 
-  area.innerHTML = '';
-  appliedJobs.forEach(job => {
+  applied.forEach(job => {
     const card = document.createElement('article');
     card.className = 'job-item card';
+
     card.innerHTML = `
       <div class="title">${job.role}</div>
       <div class="company">${job.company}</div>
+
+      <div class="meta">
+        <div class="tag">${job.type}</div>
+        <div class="tag">${job.location}</div>
+        <div class="tag">${job.salary}</div>
+      </div>
+
       <p>${job.description}</p>
     `;
+
     area.appendChild(card);
   });
 }
 
-// ---------- responses + interview ----------
-function renderResponses(){
+// ---------------- RESPONSES PAGE ----------------
+// ---------------- RESPONSES PAGE ----------------
+function renderResponses() {
   const area = document.querySelector('.responses-list');
-  if(!area) return;
+  if (!area) return;
 
-  responsesJobs = JSON.parse(localStorage.getItem('responsesJobs')) || [];
+  const responses =
+    JSON.parse(localStorage.getItem('responsesJobs')) || [];
+
   area.innerHTML = '';
 
-  if(responsesJobs.length === 0){
-    area.innerHTML = '<p style="color:var(--muted)">No responses yet.</p>';
+  if (responses.length === 0) {
+    area.innerHTML =
+      '<p style="color:var(--muted);padding:18px">No responses yet.</p>';
     return;
   }
 
-  responsesJobs.forEach(job => {
+  responses.forEach(job => {
+
     let interviewHTML = '';
 
-    if(job.response === 'Interview'){
-      if(job.interview){
-        interviewHTML = `
-          <div style="margin-top:10px;padding:10px;border-left:4px solid #0b6b4a">
-            <strong>Interview Details</strong><br>
-            Mode: ${job.interview.mode}<br>
-            Location: ${job.interview.location}<br>
-            Date: ${job.interview.date || 'To be informed'}
-          </div>
-        `;
-      } else {
-        interviewHTML = `
-          <p style="color:#b45309;margin-top:8px">
-            Interview details will be shared soon.
-          </p>
-        `;
-      }
+    if (job.response === 'Interview' && job.interview) {
+      interviewHTML = `
+        <div style="margin-top:10px;font-size:13px;color:var(--muted)">
+          <div><strong>Mode:</strong> ${job.interview.mode || '-'}</div>
+          <div><strong>Date:</strong> ${job.interview.date || '-'}</div>
+          <div><strong>Location:</strong> ${job.interview.location || '-'}</div>
+          ${job.interview.note
+            ? `<div><strong>Note:</strong> ${job.interview.note}</div>`
+            : ''}
+        </div>
+      `;
     }
 
     const card = document.createElement('article');
     card.className = 'job-item card';
+
     card.innerHTML = `
-      <div class="title">${job.role}</div>
-      <div class="company">${job.company}</div>
-      <strong>Status:</strong> ${job.response}
+      <div style="display:flex;justify-content:space-between">
+        <div>
+          <div class="title">${job.role}</div>
+          <div class="company">${job.company}</div>
+        </div>
+        <div style="font-weight:700">
+          ${job.response || 'Pending'}
+        </div>
+      </div>
+
       ${interviewHTML}
     `;
+
     area.appendChild(card);
   });
-}
-
-// ---------- auth guard ----------
-if(!localStorage.getItem('careerhubLoggedIn')){
-  window.location.href = 'login.html';
 }
