@@ -14,11 +14,16 @@
     </div>
 
     <nav class="top-actions">
-      <input id="search" class="search" type="search" placeholder="Search role or company..." />
+      <div class="search-container">
+        <input id="search" class="search" type="search" placeholder="Search role or company..." />
+        <div id="search-suggestions" class="search-suggestions"></div>
+      </div>
       <button id="theme-toggle" class="circle-btn" aria-label="Toggle theme">🌙</button>
       <a href="applied.html" class="ghost-btn">Applied</a>
       <a href="responses.html" class="ghost-btn">Responses</a>
       <a href="profile.html" class="ghost-btn">Profile</a>
+      <a href="dashboard.html" class="ghost-btn">📊 Dashboard</a>
+      <a href="favorites.html" class="ghost-btn">⭐ Favorites</a>
     </nav>
   </header>
 
@@ -48,7 +53,26 @@
             <option value="80001-100000">₹80k – ₹100k</option>
           </select>
         </div>
+        <div class="filter-item">
+          <label>Experience</label>
+          <select id="filter-experience">
+            <option value="">Any</option>
+            <option value="entry">Entry Level</option>
+            <option value="mid">Mid Level</option>
+            <option value="senior">Senior Level</option>
+            <option value="lead">Lead/Manager</option>
+          </select>
+        </div>
       </div>
+      <div class="filter-actions">
+        <button id="clear-filters" class="ghost-btn">Clear Filters</button>
+        <button id="save-search" class="primary-btn">Save Search</button>
+      </div>
+    </section>
+
+    <section class="recommendations-section">
+      <h3>Recommended for You</h3>
+      <div id="recommended-jobs" class="recommended-grid"></div>
     </section>
 
     <section class="content-grid">
@@ -71,6 +95,17 @@
 
   <!-- small toast -->
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2024 CareerHub. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+  </footer>
 
   <script src="app.js" defer></script>
 </body>

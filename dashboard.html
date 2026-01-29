@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CareerHub — Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-light">
+  <header class="site-header">
+    <div class="brand-wrap">
+      <div class="brand">CareerHub</div>
+      <div class="tagline">Your job search analytics</div>
+    </div>
+    <nav class="top-actions">
+      <a href="index.html" class="ghost-btn">Home</a>
+      <a href="applied.html" class="ghost-btn">Applied</a>
+      <a href="responses.html" class="ghost-btn">Responses</a>
+      <a href="favorites.html" class="ghost-btn">⭐ Favorites</a>
+      <button id="theme-toggle" class="circle-btn">🌙</button>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="dashboard-header">
+      <div class="welcome-banner glass">
+        <div class="welcome-content">
+          <h1>Welcome back! 👋</h1>
+          <p id="welcome-message">Keep up the great work on your job search journey</p>
+        </div>
+        <div class="quick-actions">
+          <a href="index.html" class="quick-action-btn">
+            <span class="action-icon">🔍</span>
+            <span>Browse Jobs</span>
+          </a>
+          <a href="applied.html" class="quick-action-btn">
+            <span class="action-icon">📝</span>
+            <span>My Applications</span>
+          </a>
+          <a href="favorites.html" class="quick-action-btn">
+            <span class="action-icon">⭐</span>
+            <span>Favorites</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-stats">
+      <div class="stats-grid">
+        <div class="stat-card glass stat-card-primary">
+          <div class="stat-icon">📊</div>
+          <h3>Total Applied</h3>
+          <div class="stat-number" id="total-applied">0</div>
+          <div class="stat-label">Applications submitted</div>
+          <div class="stat-trend" id="applied-trend"></div>
+        </div>
+        
+        <div class="stat-card glass stat-card-warning">
+          <div class="stat-icon">⏳</div>
+          <h3>Pending</h3>
+          <div class="stat-number" id="pending-count">0</div>
+          <div class="stat-label">Awaiting response</div>
+          <div class="stat-percentage" id="pending-percentage"></div>
+        </div>
+        
+        <div class="stat-card glass stat-card-success">
+          <div class="stat-icon">🎯</div>
+          <h3>Interviews</h3>
+          <div class="stat-number" id="interview-count">0</div>
+          <div class="stat-label">Interview scheduled</div>
+          <div class="stat-percentage" id="interview-percentage"></div>
+        </div>
+        
+        <div class="stat-card glass stat-card-accent">
+          <div class="stat-icon">⭐</div>
+          <h3>Favorites</h3>
+          <div class="stat-number" id="favorites-count">0</div>
+          <div class="stat-label">Saved jobs</div>
+          <div class="stat-trend" id="favorites-trend"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-insights">
+      <div class="insight-cards">
+        <div class="insight-card glass">
+          <h3>Success Rate</h3>
+          <div class="success-rate-container">
+            <div class="circular-progress" id="success-rate-circle">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="progress-bg"></circle>
+                <circle cx="50" cy="50" r="45" class="progress-bar" id="success-circle"></circle>
+              </svg>
+              <div class="progress-text" id="success-rate-text">0%</div>
+            </div>
+            <p class="insight-description">Interview to application ratio</p>
+          </div>
+        </div>
+
+        <div class="insight-card glass">
+          <h3>Weekly Goal</h3>
+          <div class="goal-container">
+            <div class="goal-progress">
+              <div class="goal-bar">
+                <div class="goal-fill" id="goal-fill"></div>
+              </div>
+              <div class="goal-stats">
+                <span id="goal-current">0</span> / <span id="goal-target">10</span> applications
+              </div>
+            </div>
+            <button class="btn-set-goal" id="set-goal-btn">Set Goal</button>
+          </div>
+        </div>
+
+        <div class="insight-card glass">
+          <h3>Response Time</h3>
+          <div class="response-time-container">
+            <div class="avg-time" id="avg-response-time">-</div>
+            <p class="insight-description">Average response time</p>
+            <div class="time-breakdown" id="time-breakdown"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-charts">
+      <div class="chart-container glass">
+        <div class="chart-header">
+          <h3>Application Status</h3>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot pending-dot"></span> Pending</span>
+            <span class="legend-item"><span class="legend-dot interview-dot"></span> Interview</span>
+            <span class="legend-item"><span class="legend-dot rejected-dot"></span> Rejected</span>
+          </div>
+        </div>
+        <div id="status-chart" class="chart-placeholder">
+          <div class="chart-bar-item">
+            <span class="bar-label">Pending</span>
+            <div class="bar-container">
+              <div class="bar pending" style="width: 0%">
+                <span class="bar-value" id="pending-value">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-bar-item">
+            <span class="bar-label">Interview</span>
+            <div class="bar-container">
+              <div class="bar interview" style="width: 0%">
+                <span class="bar-value" id="interview-value">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-bar-item">
+            <span class="bar-label">Rejected</span>
+            <div class="bar-container">
+              <div class="bar rejected" style="width: 0%">
+                <span class="bar-value" id="rejected-value">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container glass">
+        <div class="chart-header">
+          <h3>Top Fields Applied</h3>
+          <span class="chart-subtitle">Your most targeted industries</span>
+        </div>
+        <div id="fields-chart" class="chart-placeholder">
+          <div class="field-stats"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-timeline">
+      <div class="timeline-container glass">
+        <h3>Application Timeline</h3>
+        <div id="application-timeline" class="timeline-content"></div>
+      </div>
+    </section>
+
+    <section class="recent-activity">
+      <h3>Recent Activity</h3>
+      <div id="activity-log" class="activity-list"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2024 CareerHub. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

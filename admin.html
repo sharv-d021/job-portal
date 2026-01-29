@@ -35,13 +35,83 @@
 
     <!-- JOBS -->
     <section id="jobs" class="section hidden">
-      <h3>Add Vacancy</h3>
-      <input id="jobTitle" placeholder="Job Title">
-      <textarea id="jobDesc" placeholder="Role Description"></textarea>
-      <button onclick="addJob()">Add Job</button>
+      <h3>Post New Job</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Company Name *</label>
+          <input id="jobCompany" placeholder="e.g., TechNova">
+        </div>
 
-      <h4>Current Vacancies</h4>
-      <ul id="jobList"></ul>
+        <div class="form-group">
+          <label>Job Role *</label>
+          <input id="jobRole" placeholder="e.g., Frontend Developer">
+        </div>
+
+        <div class="form-group">
+          <label>Job Type *</label>
+          <select id="jobType">
+            <option value="">Select Type</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Internship">Internship</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Location *</label>
+          <input id="jobLocation" placeholder="e.g., Bangalore, Remote">
+        </div>
+
+        <div class="form-group">
+          <label>Field/Industry *</label>
+          <select id="jobField">
+            <option value="">Select Field</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Software Development">Software Development</option>
+            <option value="Mobile Development">Mobile Development</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Machine Learning / AI">Machine Learning / AI</option>
+            <option value="Design / UI-UX">Design / UI-UX</option>
+            <option value="DevOps / Cloud">DevOps / Cloud</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Sales / Business Development">Sales / Business Development</option>
+            <option value="Finance / Accounting">Finance / Accounting</option>
+            <option value="Content Writing">Content Writing</option>
+            <option value="Cybersecurity">Cybersecurity</option>
+            <option value="Product Management">Product Management</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Salary Range *</label>
+          <input id="jobSalary" placeholder="e.g., 40k-50k, 15k-20k">
+        </div>
+
+        <div class="form-group full-width">
+          <label>Job Description *</label>
+          <textarea id="jobDesc" placeholder="Describe the role, responsibilities, and requirements..." rows="4"></textarea>
+        </div>
+      </div>
+
+      <button onclick="addJobToPortal()" class="btn-primary">
+        <span>📝</span> Post Job
+      </button>
+
+      <h4>Posted Jobs</h4>
+      <div class="job-filters">
+        <input type="text" id="searchJobs" placeholder="Search jobs..." onkeyup="filterJobs()">
+        <select id="filterField" onchange="filterJobs()">
+          <option value="">All Fields</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Data Science">Data Science</option>
+          <option value="Design / UI-UX">Design / UI-UX</option>
+          <option value="Marketing">Marketing</option>
+        </select>
+      </div>
+      <div id="jobList" class="job-cards"></div>
     </section>
 
     <!-- APPLICATIONS -->
