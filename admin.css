@@ -86,14 +86,38 @@ body {
 }
 
 /* ---------- FORM ELEMENTS ---------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   padding: 11px 12px;
-  margin-bottom: 14px;
   border-radius: 7px;
   border: 1px solid #cbd5e1;
   font-size: 14px;
+  background: #fff;
 }
 
 textarea {
@@ -102,9 +126,11 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* ---------- BUTTONS ---------- */
@@ -125,6 +151,20 @@ button:hover {
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
 }
 
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
 .action-btn {
   background: #16a34a;
   margin-right: 8px;
@@ -142,17 +182,109 @@ button:hover {
   background: #b91c1c;
 }
 
-/* ---------- JOB LIST ---------- */
-#jobList {
-  margin-top: 10px;
+/* ---------- JOB FILTERS ---------- */
+.job-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-#jobList li {
+.job-filters input,
+.job-filters select {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* ---------- JOB CARDS ---------- */
+.job-cards {
+  display: grid;
+  gap: 16px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.job-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.job-card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.job-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px dashed #e5e7eb;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.job-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.job-card-company {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.job-card-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.job-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-weight: 600;
+}
+
+.job-card-desc {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.job-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.btn-edit {
+  background: #f59e0b;
+}
+
+.btn-edit:hover {
+  background: #d97706;
+}
+
+.btn-delete {
+  background: #dc2626;
+}
+
+.btn-delete:hover {
+  background: #b91c1c;
 }
 
 /* ---------- APPLICATION LIST ---------- */

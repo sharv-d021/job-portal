@@ -3,12 +3,33 @@ if (localStorage.getItem("careerhubRole") !== "admin") {
   window.location.href = "login.html";
 }
 
+// -------------------- LOAD JOBS DATA --------------------
+let allJobs = [];
+
+async function loadJobs() {
+  try {
+    const response = await fetch('jobs.json');
+    allJobs = await response.json();
+    renderJobsList();
+  } catch (error) {
+    console.error('Error loading jobs:', error);
+    allJobs = JSON.parse(localStorage.getItem('careerhubAllJobs')) || [];
+    renderJobsList();
+  }
+}
+
 // -------------------- NAVIGATION --------------------
 function showSection(id) {
   document.querySelectorAll(".section").forEach(s =>
     s.classList.add("hidden")
   );
   document.getElementById(id).classList.remove("hidden");
+  
+  if (id === 'jobs') {
+    loadJobs();
+  } else if (id === 'applications') {
+    renderApplications();
+  }
 }
 
 // -------------------- LOGOUT --------------------
@@ -37,54 +58,208 @@ function saveCompany() {
   alert("Company details saved.");
 }
 
-// -------------------- DEMO JOB MANAGEMENT --------------------
-let demoJobs = JSON.parse(localStorage.getItem("careerhubJobs")) || [];
+// -------------------- ADD JOB TO PORTAL --------------------
+function addJobToPortal() {
+  const company = document.getElementById('jobCompany').value.trim();
+  const role = document.getElementById('jobRole').value.trim();
+  const type = document.getElementById('jobType').value;
+  const location = document.getElementById('jobLocation').value.trim();
+  const field = document.getElementById('jobField').value;
+  const salary = document.getElementById('jobSalary').value.trim();
+  const description = document.getElementById('jobDesc').value.trim();
 
-function addJob() {
-  const title = jobTitle.value.trim();
-  const desc = jobDesc.value.trim();
-
-  if (!title || !desc) {
-    alert("Please fill all job fields before adding.");
+  // Validation
+  if (!company || !role || !type || !location || !field || !salary || !description) {
+    alert('Please fill all required fields!');
     return;
   }
 
-  demoJobs.push({ id: Date.now(), title, desc });
-  localStorage.setItem("careerhubJobs", JSON.stringify(demoJobs));
+  // Create new job object
+  const newJob = {
+    id: Date.now(),
+    company: company,
+    role: role,
+    type: type,
+    location: location,
+    field: field,
+    salary: salary,
+    description: description
+  };
 
-  jobTitle.value = "";
-  jobDesc.value = "";
-  renderDemoJobs();
+  // Add to jobs array
+  allJobs.push(newJob);
+  
+  // Save to localStorage (since we can't write to JSON file directly)
+  localStorage.setItem('careerhubAllJobs', JSON.stringify(allJobs));
+
+  // Clear form
+  document.getElementById('jobCompany').value = '';
+  document.getElementById('jobRole').value = '';
+  document.getElementById('jobType').value = '';
+  document.getElementById('jobLocation').value = '';
+  document.getElementById('jobField').value = '';
+  document.getElementById('jobSalary').value = '';
+  document.getElementById('jobDesc').value = '';
+
+  // Show success message
+  showAdminNotification('Job posted successfully! ✅');
+
+  // Refresh job list
+  renderJobsList();
 }
 
-function removeJob(id) {
-  demoJobs = demoJobs.filter(j => j.id !== id);
-  localStorage.setItem("careerhubJobs", JSON.stringify(demoJobs));
-  renderDemoJobs();
-}
+// -------------------- RENDER JOBS LIST --------------------
+function renderJobsList() {
+  const container = document.getElementById('jobList');
+  if (!container) return;
 
-function renderDemoJobs() {
-  const list = document.getElementById("jobList");
-  if (!list) return;
-
-  list.innerHTML = "";
-
-  if (demoJobs.length === 0) {
-    list.innerHTML =
-      `<p class="empty-text">No demo vacancies added.</p>`;
+  if (allJobs.length === 0) {
+    container.innerHTML = '<p class="empty-text">No jobs posted yet.</p>';
     return;
   }
 
-  demoJobs.forEach(j => {
-    list.innerHTML += `
-      <li>
-        ${j.title}
-        <button onclick="removeJob(${j.id})">Remove</button>
-      </li>
-    `;
+  container.innerHTML = allJobs.map(job => `
+    <div class="job-card">
+      <div class="job-card-header">
+        <div>
+          <div class="job-card-title">${job.role}</div>
+          <div class="job-card-company">${job.company}</div>
+        </div>
+      </div>
+      <div class="job-card-meta">
+        <span class="job-tag">${job.type}</span>
+        <span class="job-tag">${job.location}</span>
+        <span class="job-tag">${job.field}</span>
+        <span class="job-tag">${job.salary}</span>
+      </div>
+      <div class="job-card-desc">${job.description}</div>
+      <div class="job-card-actions">
+        <button class="btn-edit" onclick="editJob(${job.id})">✏️ Edit</button>
+        <button class="btn-delete" onclick="deleteJob(${job.id})">🗑️ Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// -------------------- FILTER JOBS --------------------
+function filterJobs() {
+  const searchTerm = document.getElementById('searchJobs').value.toLowerCase();
+  const fieldFilter = document.getElementById('filterField').value;
+
+  const filtered = allJobs.filter(job => {
+    const matchesSearch = job.role.toLowerCase().includes(searchTerm) || 
+                         job.company.toLowerCase().includes(searchTerm) ||
+                         job.description.toLowerCase().includes(searchTerm);
+    const matchesField = !fieldFilter || job.field === fieldFilter;
+    
+    return matchesSearch && matchesField;
   });
+
+  const container = document.getElementById('jobList');
+  if (filtered.length === 0) {
+    container.innerHTML = '<p class="empty-text">No jobs match your filters.</p>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(job => `
+    <div class="job-card">
+      <div class="job-card-header">
+        <div>
+          <div class="job-card-title">${job.role}</div>
+          <div class="job-card-company">${job.company}</div>
+        </div>
+      </div>
+      <div class="job-card-meta">
+        <span class="job-tag">${job.type}</span>
+        <span class="job-tag">${job.location}</span>
+        <span class="job-tag">${job.field}</span>
+        <span class="job-tag">${job.salary}</span>
+      </div>
+      <div class="job-card-desc">${job.description}</div>
+      <div class="job-card-actions">
+        <button class="btn-edit" onclick="editJob(${job.id})">✏️ Edit</button>
+        <button class="btn-delete" onclick="deleteJob(${job.id})">🗑️ Delete</button>
+      </div>
+    </div>
+  `).join('');
 }
-renderDemoJobs();
+
+// -------------------- EDIT JOB --------------------
+function editJob(jobId) {
+  const job = allJobs.find(j => j.id === jobId);
+  if (!job) return;
+
+  document.getElementById('jobCompany').value = job.company;
+  document.getElementById('jobRole').value = job.role;
+  document.getElementById('jobType').value = job.type;
+  document.getElementById('jobLocation').value = job.location;
+  document.getElementById('jobField').value = job.field;
+  document.getElementById('jobSalary').value = job.salary;
+  document.getElementById('jobDesc').value = job.description;
+
+  // Delete the old job
+  deleteJob(jobId, true);
+  
+  // Scroll to form
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  showAdminNotification('Job loaded for editing. Update and post again.');
+}
+
+// -------------------- DELETE JOB --------------------
+function deleteJob(jobId, silent = false) {
+  if (!silent && !confirm('Are you sure you want to delete this job?')) {
+    return;
+  }
+
+  allJobs = allJobs.filter(j => j.id !== jobId);
+  localStorage.setItem('careerhubAllJobs', JSON.stringify(allJobs));
+  
+  if (!silent) {
+    showAdminNotification('Job deleted successfully! 🗑️');
+  }
+  
+  renderJobsList();
+}
+
+// -------------------- NOTIFICATION --------------------
+function showAdminNotification(message) {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    z-index: 10000;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
+// Add animation styles
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideIn {
+    from { transform: translateX(400px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(400px); opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
 
 // -------------------- APPLICATIONS (REAL USER DATA) --------------------
 function renderApplications() {

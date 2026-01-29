@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CareerHub — Responses</title>
+  <title>CareerHub — Favorite Jobs</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="theme-light">
   <header class="site-header">
     <div class="brand-wrap">
       <div class="brand">CareerHub</div>
-      <div class="tagline">Company responses</div>
+      <div class="tagline">Your saved opportunities</div>
     </div>
     <nav class="top-actions">
       <a href="index.html" class="ghost-btn">Home</a>
       <a href="applied.html" class="ghost-btn">Applied</a>
+      <a href="responses.html" class="ghost-btn">Responses</a>
       <a href="dashboard.html" class="ghost-btn">📊 Dashboard</a>
       <button id="theme-toggle" class="circle-btn">🌙</button>
     </nav>
@@ -22,7 +23,7 @@
 
   <main class="page">
     <section class="content-grid single">
-      <div class="list-area responses-list" aria-live="polite"></div>
+      <div class="list-area favorites-list" aria-live="polite"></div>
     </section>
   </main>
 
@@ -31,6 +32,8 @@
       <button id="modal-close" class="modal-close">&times;</button>
       <div id="modal-content"></div>
       <div class="modal-actions">
+        <button id="modal-apply" class="primary-btn">Apply</button>
+        <button id="modal-favorite" class="ghost-btn">⭐ Remove from Favorites</button>
         <button id="modal-close-2" class="ghost-btn">Close</button>
       </div>
     </div>
